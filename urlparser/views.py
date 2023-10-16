@@ -20,5 +20,7 @@ def shorten_url(request):
 
 @api_view(['GET'])
 def redirect_url(request, short_url):
-    shortened_url = get_object_or_404(ShortenedURL, short_url=short_url)
+    shortened_url = ShortenedURL.objects.filter(short_url=short_url).first()
+    if shortened_url is None:
+        return Response(status=404, data={'message': 'Short URL not found'})
     return HttpResponseRedirect(shortened_url.url)
